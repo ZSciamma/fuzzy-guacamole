@@ -29,6 +29,7 @@ function textInput:reset()
 	self.hover = false
 	self.pointerIsVis = true				-- Is the text pointer visible?		
 	self.pointerTimer = 0
+	shiftsPressed = 0
 end
 
 function textInput:update(dt)
@@ -121,10 +122,10 @@ end
 function textInput:keypressed(key)
 	if not self.on then return end
 
-	if not self.pressed then return end
-	if key == "return" then self:enter() 
-	elseif key == "lshift" or key == "rshift" then 
+	if key == "lshift" or key == "rshift" then 
 		shiftsPressed = shiftsPressed + 1
+	elseif not self.pressed then return 
+	elseif key == "return" then self:enter() 
 	elseif key == "rctrl" or key == "lctrl" then return 
 	elseif key == "backspace" then
 		if self.pointerIndex <= 0 then return end
@@ -139,8 +140,8 @@ function textInput:keypressed(key)
 		self.pointerIndex = self.pointerIndex - 1
 	elseif key == "up" then self.pointerIndex = 0 return
 	elseif key == "down" then self.pointerIndex = string.len(self.text) return
-	elseif key == "space" then key = "%s"										-------FIX!!!!!!!!!!!!!!
 	else 
+		if key == "space" then key = " " end
 		if shiftsPressed > 0 then key = string.upper(key) end
 		self.text = self.text * { key, self.pointerIndex + 1 }
 		self.pointerIndex = self.pointerIndex + 1
@@ -160,6 +161,9 @@ function textInput:enter()
 
 	self.pressed = false
 	-- Validate it and send it the database
+	local text = self.text
+	self:reset()
+	self.on = true
 	return self.text
 end
 
