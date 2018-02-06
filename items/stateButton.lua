@@ -33,7 +33,7 @@ end
 
 -- When pressed, the button becomes 'active'. It then changes to its active colour unitl the mouse is released.
 function sButton:mousepressed(x, y)
-	if x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height then
+	if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height then
 		self.active = true
 	end
 end
@@ -41,7 +41,7 @@ end
 
 -- Check if the mouse is released on the button, in which case its function is carried out (switching states). Otherwise, the button is simply reset.
 function sButton:mousereleased(x, y)
-	if x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height and self.active then
+	if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height and self.active then
 		self:act()
 	end
 	self.active = false
@@ -54,6 +54,8 @@ function sButton:act()
 		lovelyMoon.disableState(self.s1)
 		lovelyMoon.enableState(self.s2)
 	end
+end
 
-
+function sButton:changeText(newText)
+	self.text = newText
 end
