@@ -7,6 +7,9 @@ local tempConnect = {}        -- Recent connections
 local clients = {}
 local events = {}
 
+local Info = ""                  -- The information created by the student in order to create a new account or log in.
+local creatingNewAccount = false        -- Are we creating a new account or joining an old one?
+
 serverPeer = 0
 
 
@@ -14,11 +17,7 @@ serverPeer = 0
 --JoinRequest: An unknown student wants to join the class
 
 function Server:new()
-    host = enet.host_create()  --"172.28.198.21:63176"               -- 192.168.0.12:60472 at home on Mezon2G
-                                                                -- "172.28.198.21:63176" 
-    host:connect(teacherInfo.serverLoc)
-
-    self.on = true
+    self.on = false
 end
 
 function Server:update(dt)
@@ -33,8 +32,6 @@ end
 function Server:draw()
     love.graphics.setColor(0, 0, 0)
 
-    love.graphics.print("TeacherID: "..teacherInfo.TeacherID, love.graphics.getWidth()/2 - 30, 50)
-
     for i, event in ipairs(events) do
         love.graphics.print(event.peer:index().." says "..event.data, 10, 200 + 15 * i)
     end
@@ -44,22 +41,39 @@ function Server:draw()
     end
 end
 
+function Server:connect()
+    host = enet.host_create()
+    self.server = host:connect(serverLoc)
+end
+
+function Server:CreateNewAccount(name, surname, email, password)
+    self:connect()
+
+    Info = name + surname + email + password
+    creatingNewAccount = true
+
+    self.on = true
+end
+
+function Server:LoginToAccount(email, password)
+    self:connect()
+
+    Info = email + password
+    creatingNewAccount = false
+
+    self.on = true
+end
 
 function handleEvent(event)
     if event.type == "connect" then
         serverPeer = event.peer
-        if teacherInfo.TeacherID == "" then
-            event.peer:send("NewTeacher" + teacherInfo.myForename + teacherInfo.mySurname + teacherInfo.myEmail + teacherInfo.myPassword)
-        else 
-            event.peer:send("OfferTeacherID" + teacherInfo.TeacherID + teacherInfo.myPassword)
+        if creatingNewAccount then
+            serverPeer:send("NewTeacherAccount" + Info)
+        else
+            serverPeer:send("TeacherLogin" + Info)
         end
     elseif event.type == "receive" then 
         respondToMessage(event)
-        --[[
-        local newClientNo = newClientIndex(event.peer)
-        if newClientNo then newClient(event.peer, event.data) end
-        receiveInfo(event.peer, event.data)
-        --]]
     elseif event.type == "disconnect" then
         --removeClient(event.peer)
     end
@@ -71,8 +85,14 @@ function respondToMessage(event)
     local first = messageTable[1]                   -- Find the description attached to the message
     table.remove(messageTable, 1)                   -- Remove the description, leaving only the rest of the data
     local messageResponses = {                      -- Table specfifying the appropriate response to each message description
+        ["NewAccountAccept"] = function(peer, className) completeNewAccount(className) end,
+        ["NewAccountReject"] = function(peer, reason) accountFailed(reason) end,
+        ["LoginSuccess"] = function(peer, students, classes, tournaments) completeLogin(students, classes, tournaments) end,
+        ["LoginFail"] = function(peer, reason) loginFailed(reason) end,
         ["NewClassReject"] = function (peer, classname, reason) RejectNewClass(classname, reason) end,
-        ["NewClassAccept"] = function(peer, classname, classJoinCode) AddNewClass(classname, classJoinCode) end,
+        ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
+        ["StudentJoinedClass"] = function(peer, studentID, classname) end,
+
         ["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
         ["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,
         ["NewTournamentAccept"] = function(peer, classname) newTournamentAccept(classname) end,
@@ -82,26 +102,42 @@ function respondToMessage(event)
     if messageResponses[first] then messageResponses[first](event.peer, unpack(messageTable)) end
 end
 
-
 function split(peerMessage)
     local messageTable = {}
-    for word in peerMessage:gmatch("[^%s,]+") do         -- Possibly write a better expression - try some basic email regex?
+    peerMessage = peerMessage.."....."
+    local length = #peerMessage
+    local dots = 0
+    local last = 1
+    for i = 1,length do
+        local c = string.sub(peerMessage, i, i)
+        if c == '.' then
+            dots = dots + 1
+        end
+        if dots == 5 then
+            local word = string.sub(peerMessage, last, i-5)
+            last = i + 1
+            table.insert(messageTable, word)
+            dots = 0
+        end
+    end
+
+    --[[
+    for word in peerMessage:gmatch("[^,%s]+") do         -- Possibly write a better expression - try some basic email regex?
         table.insert(messageTable, word)
     end
+    ]]--
     return messageTable
 end
 
-function ConfirmNewClass(classname)
-    serverPeer:send("NewClass" + classname)
+function ConfirmNewClass(className)
+    serverPeer:send("NewClass" + className)
 end
 
 function ConfirmNewTournament()
 
 end
 
-function AddNewClass(classname, classJoinCode)
-    addClass(classname, classJoinCode)
-end
+
 
 function RejectNewClass(classname, reason)
     -- Tell teacher class is rejected

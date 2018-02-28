@@ -24,7 +24,7 @@ end
 function state:enable()
 	students = studentList(selectedClass) 
 
-	if not ValidateTournament(selectedClass) then		-- check if selected class has tournament going
+	if IsInTournament(selectedClass) then		-- check if selected class has tournament going
 		nextB:changeText("Tournament")
 	else
 		nextB:changeText("New Tournament")
@@ -84,7 +84,7 @@ function state:wheelmoved(x, y)
 end
 
 function newTournamentRequest()
-	if ValidateTournament(selectedClass) then 	
+	if not IsInTournament(selectedClass) then 	
 		RequestNewTournament(selectedClass, 10, 5)				-- DEBUG: ADJUST FOR USER INPUT
 	else
 		lovelyMoon.disableState("class")

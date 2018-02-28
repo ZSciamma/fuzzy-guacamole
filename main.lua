@@ -13,32 +13,20 @@ require 'items.scrollBar'
 require 'comm'
 require 'database.tables'
 
-	--************ SAVED IN FILE: *************--
-	-- Make student input this upon opening the app:
-if not love.filesystem.exists("TeacherInfoSave") then
-	teacherInfo = {
-		new = true,						-- True if the user has never opened the app (and so not set the profile and class information)
-		myForename = "Mr",
-		mySurname = "Bob",
-		myEmail = "blub.blub@gmail.com",	
-		profileComplete = true, 			-- Default to true
-		ClassName = "",
-		serverLoc = "localhost:6789",	-- Will change when server is fixed
-		TeacherID = "",
-		myPassword = "Borgalorg",			-- Teacher's password, set upon starting the app for the first time
-		classes = {},
-	}
-else
-	teacherInfo = loadstring(love.filesystem.read("TeacherInfoSave"))()
-end
-	--******************************************--
+
+teacherInfo = {}
+StudentAccount = {}
+Class = {}
+Tournament = {}
+
+serverLoc = "localhost:6789"	-- Will change when server is fixed
 
 -- Some useful extension functions for strings:
 
 local metaT = getmetatable("")
 
 metaT.__add = function(string1, string2)	--  + 
-	return string1..", "..string2
+	return string1.."....."..string2
 end
 
 metaT.__mul = function(string1, toAdd)		--  * Adds t after the (i-1)th letter; toAdd = { letter, index }
@@ -82,6 +70,9 @@ function love.load()
 
 	love.window.setTitle("Interval Teaching")
 
+	states.startup = lovelyMoon.addState("states.startup", "startup")
+	states.createAccount = lovelyMoon.addState("states.createAccount", "createAccount")
+	states.login = lovelyMoon.addState("states.login", "login")
 	states.menu = lovelyMoon.addState("states.menu", "menu")
 	states.classes = lovelyMoon.addState("states.classesList", "classesList")
 	states.options = lovelyMoon.addState("states.options", "options")
@@ -90,11 +81,9 @@ function love.load()
 	states.class = lovelyMoon.addState("states.class", "class")
 	states.class = lovelyMoon.addState("states.tournament", "tournament")
 
-	lovelyMoon.enableState("menu")
+	lovelyMoon.enableState("startup")
 
 	serv = Server()
-
-	serv.on = true							-- Comment to speed up the app and smooth the scrollbar
 end
 
 
@@ -140,11 +129,5 @@ function love.wheelmoved(x, y)
 end
 
 function love.quit()
-	love.filesystem.write("TeacherInfoSave", table.serialize(teacherInfo))
-
-	love.filesystem.write("StudentAccountSave", table.serialize(StudentAccount))
-	love.filesystem.write("ClassSave", table.serialize(Class))
-	love.filesystem.write("TournamentSave", table.serialize(Tournament))
-
 	if serverPeer ~= 0 then serverPeer:disconnect_later(); serv:update() end
 end

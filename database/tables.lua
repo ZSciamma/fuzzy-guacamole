@@ -1,13 +1,3 @@
-if love.filesystem.exists("StudentAccountSave") then
-	StudentAccount = loadstring(love.filesystem.read("StudentAccountSave"))()
-	Class = loadstring(love.filesystem.read("ClassSave"))()
-	Tournament = loadstring(love.filesystem.read("TournamentSave"))()
-else
-	StudentAccount = {}
-	Class = {}
-	Tournament = {}
-end
-
 function addStudentAccount(Forename, Surname, EmailAddress, ClassName)
 	local StudentNo = #StudentAccount
 	local newStudent = {
@@ -22,23 +12,28 @@ function addStudentAccount(Forename, Surname, EmailAddress, ClassName)
 end
 
 function addClass(ClassName, JoinCode)
+	local ClassNo = #Class
 	local newClass = {
+		ClassID = ClassNo + 1,
 		ClassName = ClassName,
 		JoinCode = JoinCode
 	}
 	table.insert(Class, newClass)
+	return newClass.ClassID
 end
 
 function addTournament(ClassName, MaxDuration, Matches)
 	local TournamentNo = #Tournament
 	local newTournament = {
-		TournamentNum = TournamentNo + 1,
+		TournamentID = TournamentNo + 1,
 		ClassName = ClassName,
-		MaxDuration = MaxDuration,			-- In days
-		Matches = Matches					-- Number of matches per player
+		MaxDuration = MaxDuration,						-- In days
+		MatchesPerPerson = MatchesPerPerson,			-- Number of matches per player
+		StartDate = StartDate,
+		WinnerID = WinnerID
 	}
 	table.insert(Tournament, newTournament)
-	return TournamentNum
+	return newTournament.TournamentID
 end
 
 function studentNumber(ClassName)
@@ -65,11 +60,11 @@ function studentList(ClassName)
 	return students
 end
 
-function ValidateTournament(ClassName)
+function IsInTournament(ClassName)
 	for i,tournament in ipairs(Tournament) do
 		if tournament.ClassName == ClassName then
-			return false
+			return true
 		end
 	end
-	return true
+	return false
 end

@@ -1,7 +1,7 @@
 local state = {}
 
 local backB = sButton("Menu", 100, 100, 50, 50, "newClass", "menu")
-local input = textInput(400, 200, 300, 100)
+local input = textInput("Class Name", 400, 200, 300, 100)
 local nextB = sButton("Add Class", love.graphics.getWidth() - 150, 100, 50, 50, "newClass", function() newClass(input.text) end)
 
 
@@ -64,6 +64,10 @@ end
 function newClass(className)
 	if className == "" then return end			-- To Do: give error message
 	ConfirmNewClass(className)
+end
+
+function CompleteNewClass(className, classJoinCode)
+	addClass(className, classJoinCode)
 	lovelyMoon.disableState("newClass")
 	lovelyMoon.enableState("menu")
 end
