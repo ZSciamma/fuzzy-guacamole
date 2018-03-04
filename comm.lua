@@ -21,7 +21,7 @@ function Server:new()
 end
 
 function Server:update(dt)
-    event = host:service(100)
+    event = host:service(2)
     if event then 
         table.insert(events, event)
         handleEvent(event) 

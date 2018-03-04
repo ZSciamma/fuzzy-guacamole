@@ -90,7 +90,8 @@ end
 function love.update(dt)
 	lovelyMoon.events.update(dt)
 	if not serv.on then return end
-	if serverTimer <= 0 and not scrollBarMoving() and not scrollerMoving() then
+	--if serverTimer <= 0 and not scrollBarMoving() and not scrollerMoving() then
+	if serverTimer <= 0 then
 		serverTimer = serverTime
 		serv:update(dt)
 	else 
