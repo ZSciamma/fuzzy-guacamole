@@ -47,19 +47,27 @@ function Server:connect()
 end
 
 function Server:CreateNewAccount(name, surname, email, password)
-    self:connect()
-
     Info = name + surname + email + password
     creatingNewAccount = true
+
+    if self.server then 
+        serverPeer:send("NewTeacherAccount" + Info)
+    else
+        self:connect() 
+    end
 
     self.on = true
 end
 
 function Server:LoginToAccount(email, password)
-    self:connect()
-
     Info = email + password
     creatingNewAccount = false
+
+    if self.server then
+        serverPeer:send("TeacherLogin" + Info)
+    else
+        self:connect()
+    end
 
     self.on = true
 end
@@ -85,19 +93,19 @@ function respondToMessage(event)
     local first = messageTable[1]                   -- Find the description attached to the message
     table.remove(messageTable, 1)                   -- Remove the description, leaving only the rest of the data
     local messageResponses = {                      -- Table specfifying the appropriate response to each message description
-        ["NewAccountAccept"] = function(peer, className) completeNewAccount(className) end,
-        ["NewAccountReject"] = function(peer, reason) accountFailed(reason) end,
+        ["NewAccountAccept"] = function(peer) completeNewAccount() end,
+        ["NewAccountReject"] = function(peer, reason) AccountFailed(reason) end,
         ["LoginSuccess"] = function(peer, students, classes, tournaments) completeLogin(students, classes, tournaments) end,
         ["LoginFail"] = function(peer, reason) loginFailed(reason) end,
         ["NewClassReject"] = function (peer, classname, reason) RejectNewClass(classname, reason) end,
         ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
-        ["StudentJoinedClass"] = function(peer, studentID, classname) end,
+        ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
 
-        ["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
-        ["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,
-        ["NewTournamentAccept"] = function(peer, classname) newTournamentAccept(classname) end,
-        ["NewTournamentReject"] = function(peer, classname) RejectNewTournament(classname) end,
-        ["WelcomeBackTeacher"] = function(peer) end
+        --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
+        --["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,
+        --["NewTournamentAccept"] = function(peer, classname) newTournamentAccept(classname) end,
+        --["NewTournamentReject"] = function(peer, classname) RejectNewTournament(classname) end,
+        --["WelcomeBackTeacher"] = function(peer) end
     }
     if messageResponses[first] then messageResponses[first](event.peer, unpack(messageTable)) end
 end
@@ -112,6 +120,8 @@ function split(peerMessage)
         local c = string.sub(peerMessage, i, i)
         if c == '.' then
             dots = dots + 1
+        else
+            dots = 0
         end
         if dots == 5 then
             local word = string.sub(peerMessage, last, i-5)
@@ -129,13 +139,29 @@ function split(peerMessage)
     return messageTable
 end
 
-function ConfirmNewClass(className)
-    serverPeer:send("NewClass" + className)
+function ConfirmNewClass(classname)
+    serverPeer:send("NewClass" + classname)
 end
+
+function CompleteNewAccount()
+    creatingNewAccount = false
+    completeNewAccount()
+end
+
+function AccountFailed(reason)
+    creatingNewAccount = false
+    accountFailed(reason)
+end
+
 
 function ConfirmNewTournament()
 
 end
+
+function StudentJoinedClass(forename, surname, studentID, classname, level)
+    addStudentAccount(forename, surname, studentID, classname, level)
+end
+
 
 
 

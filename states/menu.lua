@@ -10,7 +10,7 @@ menuButtonInfo = {
 	{ "Classes", "classesList" },			-- { Button text, state name }
 	{ "New Class", "newClass" },
 	{ "Options", "options" },
-	{ "Statistics", "stats" },
+	{ "Statistics", "statistics" },
 
 	{ "Quit", function() love.event.quit() end }
 }

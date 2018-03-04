@@ -76,7 +76,7 @@ function love.load()
 	states.menu = lovelyMoon.addState("states.menu", "menu")
 	states.classes = lovelyMoon.addState("states.classesList", "classesList")
 	states.options = lovelyMoon.addState("states.options", "options")
-	states.stats = lovelyMoon.addState("states.stats", "stats")
+	states.statistics = lovelyMoon.addState("states.statistics", "statistics")
 	states.newClass = lovelyMoon.addState("states.newClass", "newClass")
 	states.class = lovelyMoon.addState("states.class", "class")
 	states.class = lovelyMoon.addState("states.tournament", "tournament")
@@ -89,9 +89,10 @@ end
 
 function love.update(dt)
 	lovelyMoon.events.update(dt)
+	if not serv.on then return end
 	if serverTimer <= 0 and not scrollBarMoving() and not scrollerMoving() then
 		serverTimer = serverTime
-		if serv.on then serv:update(dt) end
+		serv:update(dt)
 	else 
 		serverTimer = serverTimer - dt
 	end

@@ -1,11 +1,10 @@
-function addStudentAccount(Forename, Surname, EmailAddress, ClassName)
-	local StudentNo = #StudentAccount
+function addStudentAccount(StudentID, Forename, Surname, ClassName, Level)
 	local newStudent = {
-		StudentNum = StudentNo + 1,
+		StudentID = StudentID,
 		Forename = Forename,
 		Surname = Surname,
-		EmailAddress = EmailAddress,
-		ClassName = ClassName
+		ClassName = ClassName,
+		Level = Level
 	}
 	table.insert(StudentAccount, newStudent)
 	return newStudent.StudentNo
@@ -51,7 +50,7 @@ function studentList(ClassName)
 	for i,student in ipairs(StudentAccount) do
 		if student.ClassName == ClassName then
 			table.insert(students, { 
-				StudentNum = StudentNum,
+				StudentID= StudentID,
 				Forename = student.Forename,
 				Surname = student.Surname,
 			})

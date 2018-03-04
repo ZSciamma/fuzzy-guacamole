@@ -46,6 +46,7 @@ end
 
 
 function state:update(dt)
+	if not lovelyMoon.isStateEnabled("createAccount") then return end
 	for i,input in pairs(accountInputs) do
 		input:update(dt)
 	end
@@ -53,7 +54,7 @@ function state:update(dt)
 	if serverTried then
 		if serverWaitTimer <= 0 then 
 			serverTried = false
-			accountFailed("The server is currently unavaliable. Please try again later.")
+			AccountFailed("The server is currently unavaliable. Please try again later.")
 		else
 			serverWaitTimer = serverWaitTimer - dt
 		end
@@ -120,7 +121,6 @@ function validateNewAccount() 						-- Ask the server to create the new account
 	accountFailed()
 	serverTried = true
 	serverWaitTimer = serverWaitTime
-
 
 	local failureReason = serv:CreateNewAccount(name, surname, email, password1)
 	if failureReason then accountFailed(failureReason) end
