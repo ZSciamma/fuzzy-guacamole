@@ -70,6 +70,9 @@ function love.load()
 
 	love.window.setTitle("Interval Teaching")
 
+	font = love.graphics.newFont("RobotoMono-Regular.ttf", 15)
+	love.graphics.setFont(font)
+
 	states.startup = lovelyMoon.addState("states.startup", "startup")
 	states.createAccount = lovelyMoon.addState("states.createAccount", "createAccount")
 	states.login = lovelyMoon.addState("states.login", "login")
