@@ -72,6 +72,14 @@ function Server:LoginToAccount(email, password)
     self.on = true
 end
 
+function Server:tryLogout()
+    if not serverPeer then 
+        setAlert("confirmation", "The server cannot be found. Would you like to log out anyway?")
+    else
+        serverPeer:send("StudentLogout")
+    end
+end
+
 function handleEvent(event)
     if event.type == "connect" then
         serverPeer = event.peer
@@ -100,7 +108,8 @@ function respondToMessage(event)
         ["NewClassReject"] = function (peer, classname, reason) RejectNewClass(classname, reason) end,
         ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
         ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
-
+        ["LogoutSuccess"] = function(peer) logoutComplete() end,
+        
         --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
         --["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,
         --["NewTournamentAccept"] = function(peer, classname) newTournamentAccept(classname) end,

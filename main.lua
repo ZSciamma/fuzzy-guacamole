@@ -59,10 +59,10 @@ end
 
 states = {}
 
-serverTime = 1
+serverTime = 0.1
 serverTimer = serverTime
 selectedClass = ""					-- The class currently being viewed by the teacher
-
+alert = 0
 
 function love.load()
 	love.window.setMode(1100, 600)
@@ -97,6 +97,8 @@ function love.update(dt)
 	else 
 		serverTimer = serverTimer - dt
 	end
+
+	if alert ~= 0 then alert:update(dt) end
 end
 
 
@@ -104,29 +106,61 @@ function love.draw()
 	love.graphics.setColor(0, 0, 0)
 	lovelyMoon.events.draw()
 	if serv.on then serv:draw() end
+	--[[
+	-- Scrollbar Debug:
 	love.graphics.setColor(255, 0, 0)
 	if scrollBarMoving() then love.graphics.rectangle("fill", 300, 300, 300, 300) end
 	love.graphics.setColor(0, 0, 255)
 	if scrollerMoving() then love.graphics.rectangle("fill", 300, 300, 300, 300) end
+	--]]
+
+	if alert ~= 0 then alert:draw() end
 end
 
 function love.keyreleased(key)
+	-- Deal with alerts onscreen:
+	if alert ~= 0 then
+		return
+	end
+	-- No alerts:
 	lovelyMoon.events.keyreleased(key)
 end
 
 function love.keypressed(key)
+	-- Deal with alerts onscreen:
+	if alert ~= 0 then
+		return
+	end
+	-- No alerts:
 	lovelyMoon.events.keypressed(key)
 end
 
 function love.mousepressed(x, y, button)
+	-- Deal with alerts onscreen:
+	if alert ~= 0 then
+		alert:mousepressed(x, y)
+		return
+	end
+	-- No alerts:
 	lovelyMoon.events.mousepressed(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
+	-- Deal with alerts onscreen:
+	if alert ~= 0 then
+		alert:mousereleased(x, y)
+		return
+	end
+	-- No alerts:
 	lovelyMoon.events.mousereleased(x, y, button)
 end 
 
 function love.wheelmoved(x, y)
+	-- Deal with alerts onscreen:
+	if alert ~= 0 then
+		return
+	end
+	-- No alerts:
 	lovelyMoon.events.wheelmoved(x, y)
 end
 

@@ -2,7 +2,7 @@ local state = {}
 
 local backB = sButton("Menu", 100, 100, 50, 50, "newClass", "menu")
 local input = textInput("Class Name", 400, 200, 300, 100)
-local nextB = sButton("Add Class", love.graphics.getWidth() - 150, 100, 50, 50, "newClass", function() newClass(input.text) end)
+local nextB = sButton("Create Class", love.graphics.getWidth() - 150, 100, 50, 50, "newClass", function() newClass(input.text) end)
 
 
 

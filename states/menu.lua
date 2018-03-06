@@ -12,7 +12,7 @@ menuButtonInfo = {
 	{ "Options", "options" },
 	{ "Statistics", "statistics" },
 
-	{ "Quit", function() love.event.quit() end }
+	{ "Log Out", function() logout() end }
 }
 
 for i, button in ipairs(menuButtonInfo) do
@@ -79,6 +79,14 @@ function state:mousereleased(x, y)
 	for i, button in ipairs(menuButtons) do
 		button:mousereleased(x, y)
 	end
+end
+
+function logout()					-- When the logout button is pressed, the program attempts to log out
+	serv:tryLogout()
+end
+
+function logoutComplete()			-- When the server confirms the logout, the program returns to the startup screen.
+	lovelyMoon.switchState("menu", "startup")
 end
 
 return state
