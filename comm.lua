@@ -72,11 +72,15 @@ function Server:LoginToAccount(email, password)
     self.on = true
 end
 
+function Server:RequestNewTournament(ClassName, MaxDuration, Matches)
+    serverPeer:send("NewTournament" + ClassName + MaxDuration + Matches)
+end
+
 function Server:tryLogout()
     if not serverPeer then 
         setAlert("confirmation", "The server cannot be found. Would you like to log out anyway?")
     else
-        serverPeer:send("StudentLogout")
+        serverPeer:send("TeacherLogout")
     end
 end
 
@@ -109,6 +113,7 @@ function respondToMessage(event)
         ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
         ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
         ["LogoutSuccess"] = function(peer) logoutComplete() end,
+        ["NewTournamentAccept"] = function(peer, classname, maxDuration, matches) newTournamentAccept(classname, maxDuration, matches) end
         
         --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
         --["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,
@@ -121,7 +126,7 @@ end
 
 function split(peerMessage)
     local messageTable = {}
-    peerMessage = peerMessage.."....."
+    peerMessage = peerMessage..".....9"
     local length = #peerMessage
     local dots = 0
     local last = 1
@@ -130,21 +135,15 @@ function split(peerMessage)
         if c == '.' then
             dots = dots + 1
         else
-            dots = 0
-        end
-        if dots == 5 then
-            local word = string.sub(peerMessage, last, i-5)
-            last = i + 1
-            table.insert(messageTable, word)
+            if dots >= 5 then
+                local word = string.sub(peerMessage, last, i - 6)
+                if word == "0" then word = "" end                     -- Account for the server sending blank info
+                last = i 
+                table.insert(messageTable, word)
+            end
             dots = 0
         end
     end
-
-    --[[
-    for word in peerMessage:gmatch("[^,%s]+") do         -- Possibly write a better expression - try some basic email regex?
-        table.insert(messageTable, word)
-    end
-    ]]--
     return messageTable
 end
 
@@ -174,6 +173,7 @@ end
 
 
 
+
 function RejectNewClass(classname, reason)
     -- Tell teacher class is rejected
 end
@@ -191,7 +191,5 @@ function NewStudentAccepted(peer, forename, surname, email, classname)
     addStudentAccount(forename, surname, email, classname)
 end
 
-function RequestNewTournament(ClassName, MaxDuration, Matches)
-    serverPeer:send("NewTournament" + ClassName + MaxDuration + Matches)
-end
+
 

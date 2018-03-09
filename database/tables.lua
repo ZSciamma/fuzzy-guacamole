@@ -11,14 +11,12 @@ function addStudentAccount(StudentID, Forename, Surname, ClassName, Level)
 end
 
 function addClass(ClassName, JoinCode)
-	local ClassNo = #Class
 	local newClass = {
-		ClassID = ClassNo + 1,
 		ClassName = ClassName,
 		JoinCode = JoinCode
 	}
 	table.insert(Class, newClass)
-	return newClass.ClassID
+	return 
 end
 
 function addTournament(ClassName, MaxDuration, Matches)
@@ -50,7 +48,7 @@ function studentList(ClassName)
 	for i,student in ipairs(StudentAccount) do
 		if student.ClassName == ClassName then
 			table.insert(students, { 
-				StudentID= StudentID,
+				StudentID = StudentID,
 				Forename = student.Forename,
 				Surname = student.Surname,
 			})

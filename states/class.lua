@@ -85,18 +85,17 @@ end
 
 function newTournamentRequest()
 	if not IsInTournament(selectedClass) then 	
-		RequestNewTournament(selectedClass, 10, 5)				-- DEBUG: ADJUST FOR USER INPUT
+		serv:RequestNewTournament(selectedClass, 10, 5)				-- DEBUG: ADJUST FOR USER INPUT
 	else
-		lovelyMoon.disableState("class")
-		lovelyMoon.enableState("tournament")
+		lovelyMoon.switchState("class", "tournament")
 	end
 end
 
-function newTournamentAccept()
-	addTournament(selectedClass, 10, 5)							-- DEBUG: ADJUST FOR USER INPUT
+function newTournamentAccept(classname, maxDuration, matches)
+	addTournament(classname, maxDuration, matches)	
+	nextB:changeText("Tournament")
 	if lovelyMoon.isStateEnabled("class") then
-		lovelyMoon.disableState("class")
-		lovelyMoon.enableState("tournament")
+		lovelyMoon.switchState("class", "tournament")
 	end
 end
 

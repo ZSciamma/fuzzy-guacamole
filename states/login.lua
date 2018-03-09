@@ -120,7 +120,7 @@ end
 function completeLogin(students, classes, tournaments)
 	--thing = classes
 	StudentAccount = loadstring(students)() or {}
-	Class = loadstring(classes)() or {}					--{ { ClassName = "hi", JoinCode = 098 } }
+	Class = loadstring(classes)() or {}					--{ eg. { ClassName = "hi", JoinCode = 098 } }
 	Tournament = loadstring(tournaments)() or {}
 	--serv.on = false
 	lovelyMoon.disableState("login")
