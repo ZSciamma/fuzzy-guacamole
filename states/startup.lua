@@ -18,7 +18,8 @@ end
 
 
 function state:enable()
-	teacherInfo = {						-- Reset to this if the teacher logs out
+	TeacherInfo = {						-- Reset to this if the teacher logs out
+		tournamentRoundTime = 1
 	}
 end
 

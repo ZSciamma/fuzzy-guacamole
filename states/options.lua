@@ -22,7 +22,7 @@ end
 
 
 function state:disable()
-
+	addAlert("notif", "Hi", 500, 500)
 end
 
 

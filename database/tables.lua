@@ -19,13 +19,12 @@ function addClass(ClassName, JoinCode)
 	return 
 end
 
-function addTournament(ClassName, MaxDuration, Matches)
+function addTournament(ClassName, RoundTime)
 	local TournamentNo = #Tournament
 	local newTournament = {
 		TournamentID = TournamentNo + 1,
 		ClassName = ClassName,
-		MaxDuration = MaxDuration,						-- In days
-		MatchesPerPerson = MatchesPerPerson,			-- Number of matches per player
+		RoundTime = RoundTime,						-- In days
 		StartDate = StartDate,
 		WinnerID = WinnerID
 	}

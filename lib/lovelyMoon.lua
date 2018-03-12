@@ -113,6 +113,7 @@ function lovelyMoon.enableState(id)
 			state._enabled = true
 		end
 	end
+	checkAlertQueue()								-- ADDED BY ZACHARIE SCIAMMA
 end
 
 function lovelyMoon.disableState(id)
@@ -127,6 +128,7 @@ end
 function lovelyMoon.switchState(currentID, nextID)
 	lovelyMoon.disableState(currentID)
 	lovelyMoon.enableState(nextID)
+	checkAlertQueue()								-- ADDED BY ZACHARIE SCIAMMA
 end
 
 function lovelyMoon.toggleState(id)

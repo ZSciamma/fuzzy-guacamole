@@ -84,15 +84,15 @@ function state:wheelmoved(x, y)
 end
 
 function newTournamentRequest()
-	if not IsInTournament(selectedClass) then 	
-		serv:RequestNewTournament(selectedClass, 10, 5)				-- DEBUG: ADJUST FOR USER INPUT
+	if not IsInTournament(selectedClass) then
+		addAlert("slide", "Hey", 500, 500, 300, function() TournamentRoundTime = CurrentAlert.slider:value(1); serv:RequestNewTournament(selectedClass, TournamentRoundTime) end)				
 	else
 		lovelyMoon.switchState("class", "tournament")
 	end
 end
 
-function newTournamentAccept(classname, maxDuration, matches)
-	addTournament(classname, maxDuration, matches)	
+function newTournamentAccept(classname, roundTime)
+	addTournament(classname, roundTime)	
 	nextB:changeText("Tournament")
 	if lovelyMoon.isStateEnabled("class") then
 		lovelyMoon.switchState("class", "tournament")

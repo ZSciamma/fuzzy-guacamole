@@ -6,7 +6,7 @@ local radius = 15					-- Radius of the pointer
 function Slider:new(x, y, length)
 	self.x = x
 	self.y = y
-	self.cX = x + qsPerTest * nodeDist / 5				-- Pointer coordinates
+	self.cX = x + TournamentRoundTime * nodeDist / 5				-- Pointer coordinates
 	self.cY = y
 
 	self.active = false
@@ -60,6 +60,6 @@ function Slider:adjustCircle()
 	return
 end
 
-function Slider:value()
-	return 5 * (self.cX - self.x) / nodeDist						-- Returns the value selected on the slider
+function Slider:value(nodeValue)
+	return nodeValue * (self.cX - self.x) / nodeDist						-- Returns the value selected on the slider
 end

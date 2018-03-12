@@ -72,8 +72,8 @@ function Server:LoginToAccount(email, password)
     self.on = true
 end
 
-function Server:RequestNewTournament(ClassName, MaxDuration, Matches)
-    serverPeer:send("NewTournament" + ClassName + MaxDuration + Matches)
+function Server:RequestNewTournament(ClassName, RoundTime)
+    serverPeer:send("NewTournament" + ClassName + RoundTime)
 end
 
 function Server:tryLogout()
@@ -113,7 +113,7 @@ function respondToMessage(event)
         ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
         ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
         ["LogoutSuccess"] = function(peer) logoutComplete() end,
-        ["NewTournamentAccept"] = function(peer, classname, maxDuration, matches) newTournamentAccept(classname, maxDuration, matches) end
+        ["NewTournamentAccept"] = function(peer, classname, roundTime) newTournamentAccept(classname, roundTime) end
         
         --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
         --["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,

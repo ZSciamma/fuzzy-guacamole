@@ -9,9 +9,14 @@ require 'items.ansButton'
 require 'items.slider'
 require 'items.textInput'
 require 'items.scrollBar'
+require 'items.notification'
+require 'items.confirmation'
+require 'items.slideAlert'
 
 require 'comm'
 require 'database.tables'
+
+require 'datastructures.queue'
 
 
 teacherInfo = {}
@@ -59,10 +64,14 @@ end
 
 states = {}
 
+NoAlertStates = {}
+
 serverTime = 0.1
 serverTimer = serverTime
 selectedClass = ""					-- The class currently being viewed by the teacher
-alert = 0
+CurrentAlert = 0						-- The alert currently onscreen						
+alerts = Queue()						-- The queue of alerts to be shown to the user. Each of these may be a confirmation or a notification.
+TournamentRoundTime = 0
 
 function love.load()
 	love.window.setMode(1100, 600)
@@ -101,7 +110,7 @@ function love.update(dt)
 		serverTimer = serverTimer - dt
 	end
 
-	if alert ~= 0 then alert:update(dt) end
+	if CurrentAlert ~= 0 then CurrentAlert:update(dt) end
 end
 
 
@@ -109,6 +118,9 @@ function love.draw()
 	love.graphics.setColor(0, 0, 0)
 	lovelyMoon.events.draw()
 	if serv.on then serv:draw() end
+
+	if CurrentAlert ~= 0 then CurrentAlert:draw() end
+
 	--[[
 	-- Scrollbar Debug:
 	love.graphics.setColor(255, 0, 0)
@@ -116,13 +128,11 @@ function love.draw()
 	love.graphics.setColor(0, 0, 255)
 	if scrollerMoving() then love.graphics.rectangle("fill", 300, 300, 300, 300) end
 	--]]
-
-	if alert ~= 0 then alert:draw() end
 end
 
 function love.keyreleased(key)
-	-- Deal with alerts onscreen:
-	if alert ~= 0 then
+	-- Deal with alert onscreen:
+	if CurrentAlert ~= 0 then
 		return
 	end
 	-- No alerts:
@@ -130,8 +140,8 @@ function love.keyreleased(key)
 end
 
 function love.keypressed(key)
-	-- Deal with alerts onscreen:
-	if alert ~= 0 then
+	-- Deal with alert onscreen:
+	if CurrentAlert ~= 0 then
 		return
 	end
 	-- No alerts:
@@ -139,23 +149,23 @@ function love.keypressed(key)
 end
 
 function love.mousepressed(x, y, button)
-	-- Deal with alerts onscreen:
-	if alert ~= 0 then
-		alert:mousepressed(x, y)
+	-- Deal with alert onscreen:
+	if CurrentAlert ~= 0 then
+		CurrentAlert:mousepressed(x, y)
 		return
 	end
 	-- No alerts:
-	lovelyMoon.events.mousepressed(x, y, button)
+	lovelyMoon.events.mousepressed(x, y)
 end
 
 function love.mousereleased(x, y, button)
-	-- Deal with alerts onscreen:
-	if alert ~= 0 then
-		alert:mousereleased(x, y)
+	-- Deal with alert onscreen:
+	if CurrentAlert ~= 0 then
+		CurrentAlert:mousereleased(x, y)
 		return
 	end
 	-- No alerts:
-	lovelyMoon.events.mousereleased(x, y, button)
+	lovelyMoon.events.mousereleased(x, y)
 end 
 
 function love.wheelmoved(x, y)
@@ -170,3 +180,33 @@ end
 function love.quit()
 	if serverPeer ~= 0 then serverPeer:disconnect_later(); serv:update() end
 end
+
+function addAlert(alertType, message, width, height, arg1, arg2)			-- Type is 'notif' or 'conf' or 'slide'
+	local newAlert
+	if alertType == "conf" then			
+		newAlert = Confirmation(width, height, arg1, arg2)
+	elseif alertType == "notif" then 
+		newAlert = Notification(width, height, arg1 or (function() return end))
+	elseif alertType == "slide" then
+		newAlert = SlideAlert(width, height, arg1, arg2)
+	end
+	alerts:enqueue(newAlert)
+	checkAlertQueue()
+end
+
+function checkAlertQueue()				-- Checks whether it is appropriate to send the next alert in the queue
+	if CurrentAlert ~= 0 then return false end 			-- Return if an alert is already onscreen
+	for i,s in ipairs(NoAlertStates) do
+		if lovelyMoon.isStateEnabled(s) then 
+			return false
+		end
+	end
+	CurrentAlert = alerts:dequeue()			-- 0 if the alert queue is empty
+	return true
+end
+
+function voidAlert()					-- Throws away the current alert when the user is done with it
+	if checkAlertQueue() then return end
+	CurrentAlert = 0
+end
+
