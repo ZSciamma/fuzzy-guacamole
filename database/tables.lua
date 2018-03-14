@@ -1,3 +1,7 @@
+StudentAccount = {}
+Class = {}
+Tournament = {}
+
 function addStudentAccount(StudentID, Forename, Surname, ClassName, Level)
 	local newStudent = {
 		StudentID = StudentID,
@@ -19,14 +23,14 @@ function addClass(ClassName, JoinCode)
 	return 
 end
 
-function addTournament(ClassName, RoundTime)
+function addTournament(ClassName, RoundTime, StartDate)
 	local TournamentNo = #Tournament
 	local newTournament = {
 		TournamentID = TournamentNo + 1,
 		ClassName = ClassName,
 		RoundTime = RoundTime,						-- In days
 		StartDate = StartDate,
-		WinnerID = WinnerID
+		WinnerID = nil
 	}
 	table.insert(Tournament, newTournament)
 	return newTournament.TournamentID

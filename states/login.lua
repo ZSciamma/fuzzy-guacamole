@@ -8,26 +8,24 @@ local loginInputs = {
 }
 
 local backB = sButton("Back", 100, 100, 50, 50, "login", "startup")
-local enterB = sButton("Log In", 400, 450, 300, 75, "login", function() validateLogin() end)
+local enterB = sButton("Log In", 400, 450, 300, 75, "login", function() ValidateLogin() end)
 
 local errorReason = ""					-- Why the user's account creation failed
 local serverWaitTime = 5				-- Time after which the server is declared unavaliable
 local serverWaitTimer = serverWaitTime
 local serverTried = false				-- Are we trying to connect to the server?
 
+
 function state:new()
 	return lovelyMoon.new(self)
 end
-
 
 function state:load()
 
 end
 
-
 function state:close()
 end
-
 
 function state:enable()
 	for i,input in pairs(loginInputs) do
@@ -35,14 +33,12 @@ function state:enable()
 	end
 end
 
-
 function state:disable()
 	for i,input in pairs(loginInputs) do
 		input:disable()
 	end
-	loginFailed() 					-- Reset errors and timers
+	LoginFailed() 					-- Reset errors and timers
 end
-
 
 function state:update(dt)
 	for i,input in pairs(loginInputs) do
@@ -51,13 +47,12 @@ function state:update(dt)
 
 	if serverTried then
 		if serverWaitTimer <= 0 then 
-			loginFailed("The server is currently unavaliable. Please try again later.")
+			LoginFailed("The server is currently unavaliable. Please try again later.")
 		else
 			serverWaitTimer = serverWaitTimer - dt
 		end
 	end
 end
-
 
 function state:draw()
 	backB:draw()
@@ -101,23 +96,24 @@ function state:mousereleased(x, y, button)
 	end
 end
 
-function validateLogin()
+
+function ValidateLogin()
 	local email = loginInputs.Email.text
 	local password = loginInputs.Password.text
 	if email == "" or password == "" then
-		loginFailed("Please fill in all fields.")
+		LoginFailed("Please fill in all fields.")
 		return
 	end
 
-	loginFailed()
+	LoginFailed()
 	serverTried = true
 	serverWaitTimer = serverWaitTime
 
 	local failureReason = serv:LoginToAccount(email, password)
-	if failureReason then loginFailed(failureReason) end
+	if failureReason then LoginFailed(failureReason) end
 end
 
-function completeLogin(students, classes, tournaments)
+function CompleteLogin(students, classes, tournaments)
 	--thing = classes
 	StudentAccount = loadstring(students)() or {}
 	Class = loadstring(classes)() or {}					--{ eg. { ClassName = "hi", JoinCode = 098 } }
@@ -127,7 +123,7 @@ function completeLogin(students, classes, tournaments)
 	lovelyMoon.enableState("menu")
 end
 
-function loginFailed(reason)
+function LoginFailed(reason)
 	errorReason = reason or ""
 	serverTried = false
 	serverWaitTimer = serverWaitTime

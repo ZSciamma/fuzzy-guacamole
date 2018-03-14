@@ -2,8 +2,7 @@ local state = {}
 
 local backB = sButton("Menu", 100, 100, 50, 50, "newClass", "menu")
 local input = textInput("Class Name", 400, 200, 300, 100)
-local nextB = sButton("Create Class", love.graphics.getWidth() - 150, 100, 50, 50, "newClass", function() newClass(input.text) end)
-
+local nextB = sButton("Create Class", love.graphics.getWidth() - 150, 100, 50, 50, "newClass", function() NewClass(input.text) end)
 
 
 function state:new()
@@ -61,7 +60,7 @@ function state:mousereleased(x, y, button)
 	input:mousereleased(x, y)
 end
 
-function newClass(className)
+function NewClass(className)
 	if className == "" then return end			-- To Do: give error message
 	ConfirmNewClass(className)
 end

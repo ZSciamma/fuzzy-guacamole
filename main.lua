@@ -19,13 +19,6 @@ require 'database.tables'
 require 'datastructures.queue'
 
 
-teacherInfo = {}
-StudentAccount = {}
-Class = {}
-Tournament = {}
-
-serverLoc = "localhost:6789"	-- Will change when server is fixed
-
 -- Some useful extension functions for strings:
 
 local metaT = getmetatable("")
@@ -62,16 +55,26 @@ function itemIn(table, item)		-- Is the item in the table?
 	return false
 end
 
+
+
 states = {}
 
 NoAlertStates = {}
 
-serverTime = 0.1
-serverTimer = serverTime
-selectedClass = ""					-- The class currently being viewed by the teacher
+local serverTime = 0.1
+local serverTimer = serverTime
+
+-- Global variables:
+
+
+SelectedClass = ""					-- The class currently being viewed by the teacher
 CurrentAlert = 0						-- The alert currently onscreen						
 alerts = Queue()						-- The queue of alerts to be shown to the user. Each of these may be a confirmation or a notification.
 TournamentRoundTime = 0
+TeacherInfo = {}
+
+
+serverLoc = "localhost:6789"	-- Will change when server is fixed
 
 function love.load()
 	love.window.setMode(1100, 600)

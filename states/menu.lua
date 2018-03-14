@@ -12,7 +12,7 @@ menuButtonInfo = {
 	{ "Options", "options" },
 	{ "Statistics", "statistics" },
 
-	{ "Log Out", function() logout() end }
+	{ "Log Out", function() Logout() end }
 }
 
 for i, button in ipairs(menuButtonInfo) do
@@ -37,7 +37,7 @@ end
 
 
 function state:enable()
-	selectedClass = ""		-- If user is here, then no class has been selected yet
+	SelectedClass = ""		-- If user is here, then no class has been selected yet
 end
 
 
@@ -81,11 +81,11 @@ function state:mousereleased(x, y)
 	end
 end
 
-function logout()					-- When the logout button is pressed, the program attempts to log out
+function Logout()					-- When the logout button is pressed, the program attempts to log out
 	serv:tryLogout()
 end
 
-function logoutComplete()			-- When the server confirms the logout, the program returns to the startup screen.
+function LogoutComplete()			-- When the server confirms the logout, the program returns to the startup screen.
 	lovelyMoon.switchState("menu", "startup")
 end
 

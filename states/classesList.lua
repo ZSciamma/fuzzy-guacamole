@@ -26,7 +26,7 @@ function state:enable()
 		table.insert(classButtons, sButton(classname, 400 + 300 * ((i - 1) % 2), 100 + 150 * (math.floor((i - 1) / 2)), 200, 100, "classesList", function() goToClass(classname) end))
 	end
 
-	selectedClass = ""			-- If user is here, then no class has been selected yet
+	SelectedClass = ""			-- If user is here, then no class has been selected yet
 	scroller:On()
 	scroller:resetPosition()
 end
@@ -85,8 +85,8 @@ function state:wheelmoved(x, y)
 	scroller:wheelmoved(x, y)
 end
 
-function goToClass(classname)
-	selectedClass = classname
+function goToClass(classname)		-- Move to the 'class' screen, storing the name of the selected class in a global variable
+	SelectedClass = classname
 
 	lovelyMoon.disableState("classesList")
 	lovelyMoon.enableState("class")
