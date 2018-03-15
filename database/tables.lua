@@ -23,13 +23,14 @@ function addClass(ClassName, JoinCode)
 	return 
 end
 
-function addTournament(ClassName, RoundTime, StartDate)
+function addTournament(ClassName, RoundLength, QsPerMatch, LastRound)
 	local TournamentNo = #Tournament
 	local newTournament = {
 		TournamentID = TournamentNo + 1,
 		ClassName = ClassName,
-		RoundTime = RoundTime,						-- In days
-		StartDate = StartDate,
+		RoundLength = RoundLength,
+		QsPerMatch = QsPerMatch,
+		LastRound = LastRound,
 		WinnerID = nil
 	}
 	table.insert(Tournament, newTournament)

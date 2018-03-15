@@ -129,6 +129,7 @@ end
 
 
 function Server:draw()
+    ---[[
     love.graphics.setColor(0, 0, 0)
 
     for i, event in ipairs(events) do
@@ -138,6 +139,7 @@ function Server:draw()
     for i, client in ipairs(clients) do
         love.graphics.print(client[3], love.graphics.getWidth() - 100, 20)
     end
+    --]]
 end
 
 function Server:connect()
@@ -171,8 +173,8 @@ function Server:LoginToAccount(email, password)
     self.on = true
 end
 
-function Server:RequestNewTournament(ClassName, RoundTime)
-    serverPeer:send("NewTournament" + ClassName + RoundTime)
+function Server:RequestNewTournament(ClassName, RoundTime, QsPerMatch)
+    serverPeer:send("NewTournament" + ClassName + RoundTime + QsPerMatch)
 end
 
 function Server:tryLogout()

@@ -85,7 +85,7 @@ end
 
 function NewTournamentRequest()		-- Request a new tournament from the server
 	if not IsInTournament(SelectedClass) then
-		addAlert("slide", "Hey", 500, 500, 300, function() TournamentRoundTime = CurrentAlert.slider:value(1); serv:RequestNewTournament(SelectedClass, TournamentRoundTime) end)				
+		addAlert("slide", "Hey", 500, 500, 300, function() TeacherInfo.TournamentRoundTime = CurrentAlert.slider1:value(1); TeacherInfo.TournamentMatchQuestions = CurrentAlert.slider2:value(5); serv:RequestNewTournament(SelectedClass, TeacherInfo.TournamentRoundTime, TeacherInfo.TournamentMatchQuestions) end)				
 	else
 		lovelyMoon.switchState("class", "tournament")
 	end
