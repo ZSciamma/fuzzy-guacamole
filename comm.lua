@@ -73,6 +73,10 @@ local function NewStudentAccepted(peer, forename, surname, email, classname)
     addStudentAccount(forename, surname, email, classname)
 end
 
+local function DisplayTournamentRanking(classname, ranking)
+    UpdateTournamentRanking(classname, ranking)
+end
+
 local function respondToMessage(event)   
     local messageTable = split(event.data)
     local first = messageTable[1]                   -- Find the description attached to the message
@@ -86,7 +90,8 @@ local function respondToMessage(event)
         ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
         ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
         ["LogoutSuccess"] = function(peer) LogoutComplete() end,
-        ["NewTournamentAccept"] = function(peer, classname, roundTime) NewTournamentAccept(classname, roundTime) end
+        ["NewTournamentAccept"] = function(peer, classname, roundTime) NewTournamentAccept(classname, roundTime) end,
+        ["TournamentFinished"] = function(peer, classname, ranking) DisplayTournamentRanking(classname, ranking) end,
         
         --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
         --["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,

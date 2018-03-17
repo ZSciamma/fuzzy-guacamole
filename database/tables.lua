@@ -31,13 +31,13 @@ function addTournament(ClassName, RoundLength, QsPerMatch, LastRound)
 		RoundLength = RoundLength,
 		QsPerMatch = QsPerMatch,
 		LastRound = LastRound,
-		WinnerID = nil
+		Ranking = nil
 	}
 	table.insert(Tournament, newTournament)
 	return newTournament.TournamentID
 end
 
-function studentNumber(ClassName)
+function studentNumber(ClassName)					-- Returns the number of students in a class
 	local number = 0
 	for i,student in ipairs(StudentAccount) do
 		if student.ClassName == ClassName then
@@ -61,7 +61,7 @@ function studentList(ClassName)
 	return students
 end
 
-function IsInTournament(ClassName)
+function IsInTournament(ClassName)						-- Checks whether a class currently has a tournament running
 	for i,tournament in ipairs(Tournament) do
 		if tournament.ClassName == ClassName then
 			return true
@@ -69,3 +69,15 @@ function IsInTournament(ClassName)
 	end
 	return false
 end
+
+function UpdateTournamentRanking(ClassName, Ranking) 	-- Stores the final ranking of a tournament in the database
+	for i,t in ipairs(Tournament) do
+		if t.ClassName == ClassName then
+			t.Ranking = loadstring(Ranking)() 
+			return true
+		end
+	end
+	return false
+end
+
+
