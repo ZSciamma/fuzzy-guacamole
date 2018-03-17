@@ -85,7 +85,7 @@ local function respondToMessage(event)
         ["NewClassReject"] = function (peer, classname, reason) RejectNewClass(classname, reason) end,
         ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
         ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
-        ["LogoutSuccess"] = function(peer) logoutComplete() end,
+        ["LogoutSuccess"] = function(peer) LogoutComplete() end,
         ["NewTournamentAccept"] = function(peer, classname, roundTime) NewTournamentAccept(classname, roundTime) end
         
         --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,

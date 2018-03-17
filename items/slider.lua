@@ -6,7 +6,7 @@ local radius = 15					-- Radius of the pointer
 function Slider:new(x, y, length)
 	self.x = x
 	self.y = y
-	self.cX = self.x + TeacherInfo.TournamentRoundTime * nodeDist / 5				-- Pointer coordinates
+	self.cX = x + TeacherInfo.TournamentRoundTime * nodeDist / 5				-- Pointer coordinates
 	self.cY = y
 
 	self.active = false
