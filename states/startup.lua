@@ -35,7 +35,7 @@ end
 
 function state:draw()
 	createNewAccount:draw()
-	loginToAccount:draw()	
+	loginToAccount:draw()
 end
 
 function state:keypressed(key, unicode)

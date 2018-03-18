@@ -1,18 +1,20 @@
-SlideAlert = Notification:extend()
+SlideAlert = Confirmation:extend()
 
 local buttonWidth = 200
 local buttonHeight = 50
 local buttonMarginY = 25			-- Space between bottom of the popup and the button
 
-function SlideAlert:new(width, height, sliderLength, func)	-- Potentially also insert an 'accept' function
-	SlideAlert.super.new(self, width, height, func)
+function SlideAlert:new(width, height, sliderLength, accept, reject)	-- Potentially also insert an 'accept' function
+	SlideAlert.super.new(self, width, height, accept, reject)
 
 	local slider1X = self.x + (self.width - sliderLength) / 2
-	local slider1Y = self.y + self.height / 2
+	--local slider1Y = self.y + self.height / 2
+	local slider1Y = self.y + 7 * self.height / 10
 	self.slider1 = Slider(slider1X, slider1Y, sliderLength)
 
 	local slider2X = self.x + (self.width - sliderLength) / 2
-	local slider2Y = self.y + self.height / 4
+	--local slider2Y = self.y + self.height / 4
+	local slider2Y = self.y + self.height / 3
 	self.slider2 = Slider(slider2X, slider2Y, sliderLength)
 end
 

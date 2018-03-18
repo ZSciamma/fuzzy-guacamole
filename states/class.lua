@@ -1,11 +1,10 @@
 local state = {}
 local students = {}
 
-local backB = sButton("Back", 100, 100, 50, 50, "class", "classesList")
-local nextB = sButton("New Tournament", love.graphics.getWidth() - 150, 100, 50, 50, "class", function() NewTournamentRequest() end)
+local backB = sButton("Back", 100, 100, 100, 50, "class", "classesList")
+local nextB = sButton("Tournaments", love.graphics.getWidth() - 150, 100, 100, 50, "class", "tournament")
 
 local scroller = ScrollBar()
-
 
 function state:new()
 	return lovelyMoon.new(self)
@@ -22,13 +21,7 @@ end
 
 
 function state:enable()
-	students = studentList(SelectedClass) 
-
-	if IsInTournament(SelectedClass) then		-- check if selected class has tournament going
-		nextB:changeText("Tournament")
-	else
-		nextB:changeText("New Tournament")
-	end
+	students = studentList(SelectedClass)
 
 	scroller:On()
 	scroller:resetPosition()
@@ -42,7 +35,6 @@ end
 
 function state:update(dt)
 	scroller:update(dt)
-
 end
 
 function state:draw()
@@ -83,25 +75,9 @@ function state:wheelmoved(x, y)
 	scroller:wheelmoved(x, y)
 end
 
-function NewTournamentRequest()		-- Request a new tournament from the server
-	if not IsInTournament(SelectedClass) then
-		addAlert("slide", "Hey", 500, 500, 300, function() TeacherInfo.TournamentRoundTime = CurrentAlert.slider1:value(1); TeacherInfo.TournamentMatchQuestions = CurrentAlert.slider2:value(5); serv:RequestNewTournament(SelectedClass, TeacherInfo.TournamentRoundTime, TeacherInfo.TournamentMatchQuestions) end)				
-	else
-		lovelyMoon.switchState("class", "tournament")
-	end
-end
-
-function NewTournamentAccept(classname, roundTime)	-- Once the new tournament has been accepted by the server, it is added to the teacher's data
-	addTournament(classname, roundTime)	
-	nextB:changeText("Tournament")
-	if lovelyMoon.isStateEnabled("class") then
-		lovelyMoon.switchState("class", "tournament")
-	end
-end
-
 function scrollBarMoving()
-	if scroller:isMoving() then 
-		return true 
+	if scroller:isMoving() then
+		return true
 	else
 		return false
 	end

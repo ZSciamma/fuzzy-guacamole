@@ -33,7 +33,7 @@ local function split(peerMessage)
             if dots >= 5 then
                 local word = string.sub(peerMessage, last, i - 6)
                 if word == "0" then word = "" end                     -- Account for the server sending blank info
-                last = i 
+                last = i
                 table.insert(messageTable, word)
             end
             dots = 0
@@ -77,7 +77,7 @@ local function DisplayTournamentRanking(classname, ranking)
     UpdateTournamentRanking(classname, ranking)
 end
 
-local function respondToMessage(event)   
+local function respondToMessage(event)
     local messageTable = split(event.data)
     local first = messageTable[1]                   -- Find the description attached to the message
     table.remove(messageTable, 1)                   -- Remove the description, leaving only the rest of the data
@@ -92,7 +92,7 @@ local function respondToMessage(event)
         ["LogoutSuccess"] = function(peer) LogoutComplete() end,
         ["NewTournamentAccept"] = function(peer, classname, roundTime) NewTournamentAccept(classname, roundTime) end,
         ["TournamentFinished"] = function(peer, classname, ranking) DisplayTournamentRanking(classname, ranking) end,
-        
+
         --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
         --["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,
         --["NewTournamentAccept"] = function(peer, classname) newTournamentAccept(classname) end,
@@ -110,7 +110,7 @@ local function handleEvent(event)
         else
             serverPeer:send("TeacherLogin" + Info)
         end
-    elseif event.type == "receive" then 
+    elseif event.type == "receive" then
         respondToMessage(event)
     elseif event.type == "disconnect" then
         --removeClient(event.peer)
@@ -126,15 +126,15 @@ end
 
 function Server:update(dt)
     event = host:service(2)
-    if event then 
+    if event then
         table.insert(events, event)
-        handleEvent(event) 
+        handleEvent(event)
     end
 end
 
 
 function Server:draw()
-    ---[[
+    --[[
     love.graphics.setColor(0, 0, 0)
 
     for i, event in ipairs(events) do
@@ -156,10 +156,10 @@ function Server:CreateNewAccount(name, surname, email, password)
     Info = name + surname + email + password
     creatingNewAccount = true
 
-    if self.server then 
+    if self.server then
         serverPeer:send("NewTeacherAccount" + Info)
     else
-        self:connect() 
+        self:connect()
     end
 
     self.on = true
@@ -183,7 +183,7 @@ function Server:RequestNewTournament(ClassName, RoundTime, QsPerMatch)
 end
 
 function Server:tryLogout()
-    if not serverPeer then 
+    if not serverPeer then
         setAlert("confirmation", "The server cannot be found. Would you like to log out anyway?")
     else
         serverPeer:send("TeacherLogout")
@@ -197,8 +197,3 @@ end
 function ConfirmNewTournament()
 
 end
-
-
-
-
-

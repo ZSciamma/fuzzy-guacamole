@@ -23,7 +23,7 @@ require 'datastructures.queue'
 
 local metaT = getmetatable("")
 
-metaT.__add = function(string1, string2)	--  + 
+metaT.__add = function(string1, string2)	--  +
 	return string1.."....."..string2
 end
 
@@ -40,7 +40,7 @@ end
 
 function isSub(table, subTable)				-- Check if every item in subTable is in table (recursive)
 	if subTable == {} then return true end
-	for i, j in ipairs(table) do 
+	for i, j in ipairs(table) do
 		if j == subTable[1] then
 			table.remove(subTable, 1)
 			return isSub(table, subTable)
@@ -68,9 +68,11 @@ local serverTimer = serverTime
 
 
 SelectedClass = ""					-- The class currently being viewed by the teacher
-CurrentAlert = 0						-- The alert currently onscreen						
+CurrentAlert = 0						-- The alert currently onscreen
 alerts = Queue()						-- The queue of alerts to be shown to the user. Each of these may be a confirmation or a notification.
 TeacherInfo = {}
+LetterWidth = 9							-- The width of every letter in the font used
+LetterHeight = 8						-- Approximately the average height for letter
 
 
 serverLoc = "localhost:6789"	-- Will change when server is fixed
@@ -108,7 +110,7 @@ function love.update(dt)
 	if serverTimer <= 0 then
 		serverTimer = serverTime
 		serv:update(dt)
-	else 
+	else
 		serverTimer = serverTimer - dt
 	end
 
@@ -168,7 +170,7 @@ function love.mousereleased(x, y, button)
 	end
 	-- No alerts:
 	lovelyMoon.events.mousereleased(x, y)
-end 
+end
 
 function love.wheelmoved(x, y)
 	-- Deal with alerts onscreen:
@@ -183,14 +185,14 @@ function love.quit()
 	if serverPeer ~= 0 then serverPeer:disconnect_later(); serv:update() end
 end
 
-function addAlert(alertType, message, width, height, arg1, arg2)			-- Type is 'notif' or 'conf' or 'slide'
+function addAlert(alertType, message, width, height, arg1, arg2, arg3)			-- Type is 'notif' or 'conf' or 'slide'
 	local newAlert
-	if alertType == "conf" then			
+	if alertType == "conf" then
 		newAlert = Confirmation(width, height, arg1, arg2)
-	elseif alertType == "notif" then 
+	elseif alertType == "notif" then
 		newAlert = Notification(width, height, arg1 or (function() return end))
 	elseif alertType == "slide" then
-		newAlert = SlideAlert(width, height, arg1, arg2)
+		newAlert = SlideAlert(width, height, arg1, arg2, arg3)
 	end
 	alerts:enqueue(newAlert)
 	checkAlertQueue()
@@ -199,7 +201,7 @@ end
 function checkAlertQueue()				-- Checks whether it is appropriate to send the next alert in the queue
 	if CurrentAlert ~= 0 then return false end 			-- Return if an alert is already onscreen
 	for i,s in ipairs(NoAlertStates) do
-		if lovelyMoon.isStateEnabled(s) then 
+		if lovelyMoon.isStateEnabled(s) then
 			return false
 		end
 	end
@@ -211,4 +213,3 @@ function voidAlert()					-- Throws away the current alert when the user is done 
 	if checkAlertQueue() then return end
 	CurrentAlert = 0
 end
-
