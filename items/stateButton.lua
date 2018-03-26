@@ -7,15 +7,16 @@ sButton = Object:extend()
 function sButton:new(text, x, y, width, height, s1, s2)
 	self.text = text
 	self.x = x
-	self.y = y 
+	self.y = y
 	self.width = width
 	self.height = height
 	if type(s2) == "string" then 	-- allows for buttons with 'special' functions, such as quitting the program.
 		self.s1 = s1				-- By default, buttons will be used to change between two states, though.
 		self.s2 = s2
-	else 
+	else
 		self.func = s2
 	end
+	self.on = true
 end
 
 function sButton:draw()
@@ -33,14 +34,15 @@ end
 
 -- When pressed, the button becomes 'active'. It then changes to its active colour unitl the mouse is released.
 function sButton:mousepressed(x, y)
+	if not self.on then return end
 	if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height then
 		self.active = true
 	end
 end
 
-
 -- Check if the mouse is released on the button, in which case its function is carried out (switching states). Otherwise, the button is simply reset.
 function sButton:mousereleased(x, y)
+	if not self.on then return end
 	if x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height and self.active then
 		self:act()
 	end
@@ -48,7 +50,7 @@ function sButton:mousereleased(x, y)
 end
 
 function sButton:act()
-	if self.func then 
+	if self.func then
 		self:func()
 	else
 		lovelyMoon.disableState(self.s1)
@@ -58,4 +60,12 @@ end
 
 function sButton:changeText(newText)
 	self.text = newText
+end
+
+function sButton:disable()
+	self.on = false
+end
+
+function sButton:enable()
+	self.on = true
 end

@@ -9,7 +9,6 @@ menuButtons = {}
 menuButtonInfo = {
 	{ "Classes", "classesList" },			-- { Button text, state name }
 	{ "New Class", "newClass" },
-	{ "Options", "options" },
 	{ "Statistics", "statistics" },
 
 	{ "Log Out", function() Logout() end }

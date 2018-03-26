@@ -16,6 +16,21 @@ local serverWaitTimer = serverWaitTime
 local serverTried = false				-- Are we trying to connect to the server?
 
 
+-------------------- LOCAL FUNCTIONS:
+
+local function disableButtons()
+	backB:disable()
+	enterB:disable()
+end
+
+local function enableButtons()
+	backB:enable()
+	enterB:enable()
+end
+
+
+-------------------- GLOBAL FUNCTIONS:
+
 function state:new()
 	return lovelyMoon.new(self)
 end
@@ -31,13 +46,15 @@ function state:enable()
 	for i,input in pairs(loginInputs) do
 		input:enable()
 	end
+	enableButtons()
 end
 
 function state:disable()
 	for i,input in pairs(loginInputs) do
 		input:disable()
 	end
-	LoginFailed() 					-- Reset errors and timers
+	LoginFailed()
+	disableButtons()				-- Reset errors and timers
 end
 
 function state:update(dt)
@@ -46,7 +63,7 @@ function state:update(dt)
 	end
 
 	if serverTried then
-		if serverWaitTimer <= 0 then 
+		if serverWaitTimer <= 0 then
 			LoginFailed("The server is currently unavaliable. Please try again later.")
 		else
 			serverWaitTimer = serverWaitTimer - dt
@@ -74,9 +91,9 @@ function state:keypressed(key, unicode)
 	end
 end
 
-function state:keyreleased(key, unicode)
+function state:textinput(text)
 	for i,input in pairs(loginInputs) do
-		input:keyreleased(key)
+		input:textinput(text)
 	end
 end
 
@@ -105,7 +122,16 @@ function ValidateLogin()
 		return
 	end
 
+	for i,input in pairs(loginInputs) do
+		if input:checkDelimiter() then
+			addAlert("notif", "Please enter fewer exotic characters.", 500, 500)
+			return
+		end
+	end
+
 	LoginFailed()
+	disableButtons()
+
 	serverTried = true
 	serverWaitTimer = serverWaitTime
 
@@ -124,7 +150,9 @@ function CompleteLogin(students, classes, tournaments)
 end
 
 function LoginFailed(reason)
-	errorReason = reason or ""
+	enableButtons()
+	if reason then addAlert("notif", reason, 500, 500) end
+	--errorReason = reason or ""
 	serverTried = false
 	serverWaitTimer = serverWaitTime
 end

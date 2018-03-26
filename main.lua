@@ -19,7 +19,7 @@ require 'database.tables'
 require 'datastructures.queue'
 
 
--- Some useful extension functions for strings:
+-- Some useful extension functions:
 
 local metaT = getmetatable("")
 
@@ -27,6 +27,7 @@ metaT.__add = function(string1, string2)	--  +
 	return string1.."....."..string2
 end
 
+--[[
 metaT.__mul = function(string1, toAdd)		--  * Adds t after the (i-1)th letter; toAdd = { letter, index }
 	local length = string.len(string1)
 	return string.sub(string1, 1, toAdd[2] - 1)..toAdd[1]..string.sub(string1, toAdd[2])
@@ -36,7 +37,13 @@ metaT.__div = function(string1, i)			-- / Removes the ith letter
 	local length = string.len(string1)
 	return string.sub(string1, 1, i - 1)..string.sub(string1, i + 1)
 end
+--]]
 
+function round(number)
+	return math.floor(number + 0.5)
+end
+
+--[[
 
 function isSub(table, subTable)				-- Check if every item in subTable is in table (recursive)
 	if subTable == {} then return true end
@@ -54,7 +61,7 @@ function itemIn(table, item)		-- Is the item in the table?
 	end
 	return false
 end
-
+--]]
 
 
 states = {}
@@ -82,6 +89,7 @@ function love.load()
 	love.graphics.setBackgroundColor(66, 167, 244)
 
 	love.window.setTitle("Interval Teaching")
+	love.keyboard.setKeyRepeat(true)
 
 	font = love.graphics.newFont("RobotoMono-Regular.ttf", 15)
 	love.graphics.setFont(font)
@@ -91,7 +99,6 @@ function love.load()
 	states.login = lovelyMoon.addState("states.login", "login")
 	states.menu = lovelyMoon.addState("states.menu", "menu")
 	states.classes = lovelyMoon.addState("states.classesList", "classesList")
-	states.options = lovelyMoon.addState("states.options", "options")
 	states.statistics = lovelyMoon.addState("states.statistics", "statistics")
 	states.newClass = lovelyMoon.addState("states.newClass", "newClass")
 	states.class = lovelyMoon.addState("states.class", "class")
@@ -125,13 +132,11 @@ function love.draw()
 
 	if CurrentAlert ~= 0 then CurrentAlert:draw() end
 
-	--[[
 	-- Scrollbar Debug:
 	love.graphics.setColor(255, 0, 0)
 	if scrollBarMoving() then love.graphics.rectangle("fill", 300, 300, 300, 300) end
 	love.graphics.setColor(0, 0, 255)
 	if scrollerMoving() then love.graphics.rectangle("fill", 300, 300, 300, 300) end
-	--]]
 end
 
 function love.keyreleased(key)
@@ -181,18 +186,23 @@ function love.wheelmoved(x, y)
 	lovelyMoon.events.wheelmoved(x, y)
 end
 
+function love.textinput(text)
+	lovelyMoon.events.textinput(text)
+end
+
 function love.quit()
 	if serverPeer ~= 0 then serverPeer:disconnect_later(); serv:update() end
 end
 
-function addAlert(alertType, message, width, height, arg1, arg2, arg3)			-- Type is 'notif' or 'conf' or 'slide'
+function addAlert(alertType, message, width, height, ...)			-- Type is 'notif' or 'conf' or 'slide'
+	local args = {...}						-- Holds variable number of parameters
 	local newAlert
 	if alertType == "conf" then
-		newAlert = Confirmation(width, height, arg1, arg2)
+		newAlert = Confirmation(message, width, height, args[1], args[2])
 	elseif alertType == "notif" then
-		newAlert = Notification(width, height, arg1 or (function() return end))
+		newAlert = Notification(message, width, height, args[1] or (function() return end))
 	elseif alertType == "slide" then
-		newAlert = SlideAlert(width, height, arg1, arg2, arg3)
+		newAlert = SlideAlert("", width, height, args[1], args[2], args[3], args[4], args[5], args[6], args[7])
 	end
 	alerts:enqueue(newAlert)
 	checkAlertQueue()
@@ -210,6 +220,6 @@ function checkAlertQueue()				-- Checks whether it is appropriate to send the ne
 end
 
 function voidAlert()					-- Throws away the current alert when the user is done with it
-	if checkAlertQueue() then return end
 	CurrentAlert = 0
+	checkAlertQueue()
 end

@@ -44,8 +44,8 @@ function state:keypressed(key, unicode)
 	input:keypressed(key)
 end
 
-function state:keyreleased(key, unicode)
-	input:keyreleased(key)
+function state:textinput(text)
+	input:textinput(text)
 end
 
 function state:mousepressed(x, y, button)
@@ -61,7 +61,13 @@ function state:mousereleased(x, y, button)
 end
 
 function NewClass(className)
-	if className == "" then return end			-- To Do: give error message
+	if className == "" then
+		addAlert("notif", "Please enter a class name.", 300, 300)
+		return
+	elseif string.len(className) > 25 then
+		addAlert("notif", "Please enter a shorter class name.", 300, 300)
+		return
+	end
 	ConfirmNewClass(className)
 end
 

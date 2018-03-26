@@ -19,7 +19,7 @@ serverPeer = 0
 
 -------------------- LOCAL FUNCTIONS:
 
-local function split(peerMessage)
+function split(peerMessage)     -- Splits a response into its components, using the delimiter '.....'
     local messageTable = {}
     peerMessage = peerMessage..".....9"
     local length = #peerMessage
@@ -58,7 +58,7 @@ end
 
 
 local function RejectNewClass(classname, reason)
-    -- Tell teacher class is rejected
+    addAlert("notif", reason, 300, 300)
 end
 
 local function RejectNewTournament(classname, reason)
