@@ -1,5 +1,5 @@
 -- This file creates an object representing a queue (using FIFO: first in, last out).
--- The methods implemented here were considered necessary (or added for completeness); 
+-- The methods implemented here were considered necessary (or added for completeness);
 -- some standard queue functions which were not considered useful for this program may have been omitted.
 
 Queue = Object:extend()
@@ -31,8 +31,8 @@ function Queue:peek() 					-- Return the item at the front of the queue without 
 end
 
 
-function Queue:isEmpty()	-- True if no item is in the queue; false otherwise.			
-	if self.length == 0 then 
+function Queue:isEmpty()	-- True if no item is in the queue; false otherwise.
+	if self.length == 0 then
 		return true
 	else
 		return false

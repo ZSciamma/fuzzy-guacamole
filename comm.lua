@@ -73,8 +73,9 @@ local function NewStudentAccepted(peer, forename, surname, email, classname)
     addStudentAccount(forename, surname, email, classname)
 end
 
-local function DisplayTournamentRanking(classname, ranking)
+local function TournamentFinished(classname, ranking)
     UpdateTournamentRanking(classname, ranking)
+    addAlert("notif", "The "..classname.." tournament has finished!", 500, 500)
 end
 
 local function respondToMessage(event)
@@ -91,7 +92,7 @@ local function respondToMessage(event)
         ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
         ["LogoutSuccess"] = function(peer) LogoutComplete() end,
         ["NewTournamentAccept"] = function(peer, classname, roundTime) NewTournamentAccept(classname, roundTime) end,
-        ["TournamentFinished"] = function(peer, classname, ranking) DisplayTournamentRanking(classname, ranking) end,
+        ["TournamentFinished"] = function(peer, classname, ranking) TournamentFinished(classname, ranking) end,
 
         --["NewStudentAccept"] = function(peer, forename, surname, email, classname) NewStudentAccepted(peer, forename, surname, email, classname) end,
         --["NewTeacherAccept"] = function(peer, newTeacherID) AcceptTeacherID(peer, newTeacherID) end,

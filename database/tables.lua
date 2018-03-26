@@ -73,7 +73,7 @@ end
 function UpdateTournamentRanking(ClassName, Ranking) 	-- Stores the final ranking of a tournament in the database
 	for i,t in ipairs(Tournament) do
 		if t.ClassName == ClassName then
-			t.FinalRanking = loadstring(Ranking)()
+			t.FinalRanking = Ranking
 			return true
 		end
 	end
@@ -83,7 +83,8 @@ end
 function FetchTournamentRanking(ClassName)				-- Returns the tournament ranking for the tournament finished by the class
 	for i,t in ipairs(Tournament) do
 		if t.ClassName == ClassName then
-			return t.FinalRanking
+			if not t.FinalRanking then return false end		-- Handle unfinished tournament
+			return loadstring(t.FinalRanking)()
 		end
 	end
 	return false
@@ -91,7 +92,7 @@ end
 
 function ReturnRankedStudents(Ranking)
 	rank = {}
-	for i,j in pairs(Ranking) do
+	for i,j in ipairs(Ranking) do
 		print(j.ID)
 		local name = FindStudentName(j.ID)
 		print(name or "no name")

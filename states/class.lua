@@ -43,9 +43,10 @@ function state:draw()
 
 	backB:draw()
 	nextB:draw()
+
+	love.graphics.print("Student", 200, 200 )
 	for i,student in ipairs(students) do
-		love.graphics.print(student.Forename, 200, 200 + i * 30)
-		love.graphics.print(student.Surname, 400, 200 + i * 30)
+		love.graphics.print(student.Forename.." "..student.Surname, 200, 220 + 40 * i)
 	end
 end
 

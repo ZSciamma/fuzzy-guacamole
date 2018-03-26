@@ -1,6 +1,6 @@
-local state = {}
+local state = { }
 
-local ranking = {}
+local ranking = { }
 
 local backB = sButton("Back", 100, 100, 100, 50, "tournament", "class")
 local nextB = sButton("New Tournament", love.graphics.getWidth() - 150, 100, 100, 50, "class", function() NewTournamentRequest() end)
@@ -23,8 +23,11 @@ end
 
 
 function state:enable()
+	ranking = { }
 	local finalRanks = FetchTournamentRanking(SelectedClass)
 	if finalRanks then ranking = ReturnRankedStudents(finalRanks) end
+	print("Ranking: ")
+	print(table.serialize(ranking))
 
 	scroller:On()
 	scroller:resetPosition()
@@ -50,7 +53,9 @@ function state:draw()
 	end
 
 	love.graphics.setColor(0, 0, 0)
-	if ranking ~= {} then
+	if IsInTournament(SelectedClass) then
+		love.graphics.printf("A tournament is ongoing. Check back later to see the final score!", love.graphics.getWidth() / 2 - LetterWidth * 32, 300, LetterWidth * 65, "center")
+	elseif not IsInTournament(SelectedClass) and ranking ~= { } then
 		love.graphics.print("Position", 100, 200)
 		love.graphics.print("Student", 200, 200 )
 		love.graphics.print("Score", 600, 200)
@@ -60,8 +65,6 @@ function state:draw()
 			love.graphics.print(student.Name, 200, 220 + 40 * i)
 			love.graphics.print(student.Score, 600, 220 + 40 * i)
 		end
-	else
-		love.graphics.printf("Tournament ongoing. Check back later to see the final score!", love.graphics.getWidth() / 2 - LetterWidth * 30, 300, LetterWidth * 60, "center")
 	end
 end
 
@@ -101,7 +104,6 @@ end
 
 function NewTournamentAccept(classname, roundTime)	-- Once the new tournament has been accepted by the server, it is added to the teacher's data
 	addTournament(classname, roundTime)
-	nextB:changeText("Tournament")
 	if lovelyMoon.isStateEnabled("class") then
 		lovelyMoon.switchState("class", "tournament")
 	end
