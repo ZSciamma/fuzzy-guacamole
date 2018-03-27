@@ -5,7 +5,6 @@ require 'lib.tableSer'
 
 -- Mine:
 require 'items.stateButton'
-require 'items.ansButton'
 require 'items.slider'
 require 'items.textInput'
 require 'items.scrollBar'
@@ -27,42 +26,9 @@ metaT.__add = function(string1, string2)	--  +
 	return string1.."....."..string2
 end
 
---[[
-metaT.__mul = function(string1, toAdd)		--  * Adds t after the (i-1)th letter; toAdd = { letter, index }
-	local length = string.len(string1)
-	return string.sub(string1, 1, toAdd[2] - 1)..toAdd[1]..string.sub(string1, toAdd[2])
-end
-
-metaT.__div = function(string1, i)			-- / Removes the ith letter
-	local length = string.len(string1)
-	return string.sub(string1, 1, i - 1)..string.sub(string1, i + 1)
-end
---]]
-
 function round(number)
 	return math.floor(number + 0.5)
 end
-
---[[
-
-function isSub(table, subTable)				-- Check if every item in subTable is in table (recursive)
-	if subTable == {} then return true end
-	for i, j in ipairs(table) do
-		if j == subTable[1] then
-			table.remove(subTable, 1)
-			return isSub(table, subTable)
-		end
-	end
-end
-
-function itemIn(table, item)		-- Is the item in the table?
-	for i,j in ipairs(table) do
-		if j == item then return true end
-	end
-	return false
-end
---]]
-
 
 states = {}
 
@@ -99,7 +65,6 @@ function love.load()
 	states.login = lovelyMoon.addState("states.login", "login")
 	states.menu = lovelyMoon.addState("states.menu", "menu")
 	states.classes = lovelyMoon.addState("states.classesList", "classesList")
-	states.statistics = lovelyMoon.addState("states.statistics", "statistics")
 	states.newClass = lovelyMoon.addState("states.newClass", "newClass")
 	states.class = lovelyMoon.addState("states.class", "class")
 	states.class = lovelyMoon.addState("states.tournament", "tournament")

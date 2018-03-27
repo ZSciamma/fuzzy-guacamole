@@ -9,13 +9,11 @@ menuButtons = {}
 menuButtonInfo = {
 	{ "Classes", "classesList" },			-- { Button text, state name }
 	{ "New Class", "newClass" },
-	{ "Statistics", "statistics" },
-
 	{ "Log Out", function() Logout() end }
 }
 
 for i, button in ipairs(menuButtonInfo) do
-	table.insert(menuButtons, sButton(button[1], 400, 100 + 50 * i, 300, 50, "menu", button[2]))				-- DRY: most parameters are common to every button in the menu
+	table.insert(menuButtons, sButton(button[1], 400, 50 + 100 * i, 300, 50, "menu", button[2]))				-- DRY: most parameters are common to every button in the menu
 end
 
 

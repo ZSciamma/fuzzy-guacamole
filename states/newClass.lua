@@ -72,6 +72,7 @@ function NewClass(className)
 end
 
 function CompleteNewClass(className, classJoinCode)
+	addAlert("notif", "You created a new class: "..className.."!", 500, 500)
 	addClass(className, classJoinCode)
 	lovelyMoon.disableState("newClass")
 	lovelyMoon.enableState("menu")
