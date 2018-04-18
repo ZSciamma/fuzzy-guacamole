@@ -21,7 +21,6 @@ function ScrollBar:new()
 	self.deccel = 20			-- How mcuh speed the scrollbar loses
 
 	self.on = true
-
 end
 
 function ScrollBar:resetPosition()
@@ -67,21 +66,21 @@ function ScrollBar:draw()
 
 end
 
-function ScrollBar:wheelmoved(x, y)
+function ScrollBar:wheelmoved(x, y)		-- Called whenever the mousewheel is moved
 	if not self.on then return end
 
 	self.vY = self.vY + y * self.accel
 end
 
-function ScrollBar:isMoving()
+function ScrollBar:isMoving()	-- Returns true if the scrollBar is currently moving
 	if self.vY == 0 then return false end
 	return true
 end
 
-function ScrollBar:On()
+function ScrollBar:On()			-- Turns the scrollBar on
 	self.on = true
 end
 
-function ScrollBar:Off()
+function ScrollBar:Off()		-- Turns the scrollBar off
 	self.on = false
 end

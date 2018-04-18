@@ -1,7 +1,7 @@
 local state = {}
 local classButtons = {}
 
-local backB = sButton("Back", 100, 100, 50, 50, "classesList", "menu")
+local backB = sButton("Back", 100, 100, 100, 50, "classesList", "menu")
 
 local scroller = ScrollBar()
 
@@ -23,7 +23,7 @@ function state:enable()
 	classButtons = {}
 	for i,class in ipairs(Class) do
 		local classname = class.ClassName
-		table.insert(classButtons, sButton(classname, 400 + 300 * ((i - 1) % 2), 100 + 150 * (math.floor((i - 1) / 2)), 200, 100, "classesList", function() goToClass(classname) end))
+		table.insert(classButtons, sButton(classname.."\n"..class.JoinCode, 400 + 300 * ((i - 1) % 2), 100 + 150 * (math.floor((i - 1) / 2)), 200, 100, "classesList", function() goToClass(classname) end))
 	end
 
 	SelectedClass = ""			-- If user is here, then no class has been selected yet
@@ -48,11 +48,13 @@ function state:draw()
 	love.graphics.translate(0, -scroller.y)				-- Makes scroller scroll down the page
 	backB:draw()
 
+	--[[
 	for i,class in ipairs(Class) do
 		love.graphics.print(class.ClassName, 500, 200 + i * 20)
 		love.graphics.print(class.JoinCode, 650, 200 + i * 20)
 		love.graphics.print(studentNumber(class.ClassName), 800, 200 + i * 20)
 	end
+	--]]
 
 	for i,button in ipairs(classButtons) do
 		button:draw()
@@ -93,7 +95,7 @@ function goToClass(classname)		-- Move to the 'class' screen, storing the name o
 end
 
 function scrollerMoving()
-	if scroller:isMoving() then 
+	if scroller:isMoving() then
 		return true
 	else
 		return false

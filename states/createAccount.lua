@@ -8,7 +8,7 @@ local accountInputs = {
 	Password2 = textInput("Re-Enter Password", 400, 350, 300, 25, true)
 }
 
-local backB = sButton("Back", 100, 100, 50, 50, "createAccount", "startup")
+local backB = sButton("Back", 100, 100, 100, 50, "createAccount", "startup")
 local enterB = sButton("Create Account", 400, 450, 300, 75, "createAccount", function() ValidateNewAccount() end)
 
 local errorReason = ""					-- Why the user's account creation failed

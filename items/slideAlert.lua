@@ -18,13 +18,11 @@ function SlideAlert:new(text, width, height, sliderLength, nodeValue1, nodeValue
 	self.slider2 = Slider(slider2X, slider2Y, sliderLength, nodeValue2, text2)
 end
 
-
 function SlideAlert:update(dt)
 	SlideAlert.super.update(self)
 	self.slider1:update()
 	self.slider2:update()
 end
-
 
 function SlideAlert:draw()
 	SlideAlert.super.draw(self)
@@ -32,14 +30,11 @@ function SlideAlert:draw()
 	self.slider2:draw()
 end
 
-
 function SlideAlert:mousepressed(x, y)
 	SlideAlert.super.mousepressed(self, x, y)
 	self.slider1:mousepressed(x, y)
 	self.slider2:mousepressed(x, y)
 end
-
-
 
 function SlideAlert:mousereleased(x, y)
 	SlideAlert.super.mousereleased(self, x, y)

@@ -2,13 +2,15 @@ StudentAccount = {}
 Class = {}
 Tournament = {}
 
-function addStudentAccount(StudentID, Forename, Surname, ClassName, Level)
+function addStudentAccount(StudentID, Forename, Surname, Ratings, Level, ClassName, Statistics)
 	local newStudent = {
 		StudentID = StudentID,
 		Forename = Forename,
 		Surname = Surname,
+		Ratings = Ratings,
+		Level = Level,
 		ClassName = ClassName,
-		Level = Level
+		Statistics = Statistics
 	}
 	table.insert(StudentAccount, newStudent)
 	return newStudent.StudentNo
@@ -55,6 +57,9 @@ function studentList(ClassName)
 				StudentID = StudentID,
 				Forename = student.Forename,
 				Surname = student.Surname,
+				Ratings = student.Ratings,
+				Level = student.Level,
+				Statistics = loadstring(student.Statistics)()
 			})
 		end
 	end

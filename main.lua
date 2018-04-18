@@ -39,7 +39,7 @@ local serverTimer = serverTime
 
 -- Global variables:
 
-
+intervals = { "Minor Second", "Major Second", "Minor Third", "Major Third", "Perfect Fourth", "Diminished 5th", "Perfect Fifth", "Minor Sixth", "Major Sixth", "Minor Seventh", "Major Seventh", "Octave" }
 SelectedClass = ""					-- The class currently being viewed by the teacher
 CurrentAlert = 0						-- The alert currently onscreen
 alerts = Queue()						-- The queue of alerts to be shown to the user. Each of these may be a confirmation or a notification.

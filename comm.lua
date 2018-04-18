@@ -52,8 +52,9 @@ local function accountFailed(reason)
     AccountFailed(reason)
 end
 
-local function StudentJoinedClass(forename, surname, studentID, classname, level)
-    addStudentAccount(forename, surname, studentID, classname, level)
+local function StudentJoinedClass(studentID, forename, surname, ratings, level, classname, statistics)
+    print(studentID.." "..forename.." "..surname.." "..ratings.." "..level.." "..classname.." "..statistics)
+    addStudentAccount(studentID, forename, surname, ratings, level, classname, statistics)
 end
 
 
@@ -89,7 +90,7 @@ local function respondToMessage(event)
         ["LoginFail"] = function(peer, reason) LoginFailed(reason) end,
         ["NewClassReject"] = function (peer, classname, reason) RejectNewClass(classname, reason) end,
         ["NewClassAccept"] = function(peer, classname, classJoinCode) CompleteNewClass(classname, classJoinCode) end,
-        ["StudentJoinedClass"] = function(peer, studentID, forename, surname, classname, level) StudentJoinedClass(studentID, forename, surname, classname, level) end,
+        ["StudentJoinedClass"] = function(peer, studentID, forename, surname, ratings, level, classname, statistics) StudentJoinedClass(studentID, forename, surname, ratings, level, classname, statistics) end,
         ["LogoutSuccess"] = function(peer) LogoutComplete() end,
         ["NewTournamentAccept"] = function(peer, classname, roundTime) NewTournamentAccept(classname, roundTime) end,
         ["TournamentFinished"] = function(peer, classname, ranking) TournamentFinished(classname, ranking) end,
