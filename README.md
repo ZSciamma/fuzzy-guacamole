@@ -1,4 +1,4 @@
-# fuzzy-guacamole
+# CS A Level Project: Teacher App
 
 This is part of my coursework project for the UK Computer Science AQA A Level, completed during the 2017-18 school year. This repository is the Teacher app, which works with the Student app and the Server app.
 
